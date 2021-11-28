@@ -105,6 +105,8 @@ class UserSerializer(serializers.ModelSerializer):
         ordering = ['id']
   
 
+class RefreshTokenSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
 
 
 class UserLoginSerializer(serializers.Serializer):

@@ -35,10 +35,10 @@ SECRET_KEY = 'django-insecure-e1%)wg3$68w@a#923$0tb70^%o46sh*g0i*(w=6c7&e6y5l(pa
 # SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["blog-api7991.herokuapp.com","localhost"]
-
+# ALLOWED_HOSTS = ["localhost"]
+# "blog-api7991.herokuapp.com",
 
 # Application definition
 
@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders', 
     'rest_framework',
-    
+    'drf_yasg',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'blog.apps.BlogConfig',
@@ -98,28 +98,47 @@ DATABASE_URL="sqlite:///db.sqlite3"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+import os
+import environ
+
+env = environ.Env()
+# reading .env file
+environ.Env.read_env()
+#...
+
+'''we will set all these environment variables in heroku dashboard later on'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env('POSTGRES_DB_NAME'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
+        'HOST': env('POSTGRES_HOST'),
+        'PORT': env('POSTGRES_PORT'),
+    }
+}
 
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': env('POSTGRES_DB_NAME'),
-#         'USER': env('POSTGRES_USER'),
-#         'PASSWORD': env('POSTGRES_PASSWORD'),
-#         'HOST': env('POSTGRES_HOST'),
-#         'PORT': env('POSTGRES_PORT'),
+#         'NAME': 'blog_django',
+#         'USER': 'myuser',
+#         'PASSWORD': 'mypass',
+#         'HOST': 'localhost',
+#         'PORT': '5433',
 #     }
 # }
 
 
-import dj_database_url
-DATABASES = {}
-if DEBUG:
-    DATABASES['default']={
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'sqlite3.db'),
-    }
-else:
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+# import dj_database_url
+# DATABASES = {}
+# if DEBUG:
+#     DATABASES['default']={
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'sqlite3.db'),
+#     }
+# else:
+#     DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
 # Password validation
@@ -188,7 +207,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 2
+    'PAGE_SIZE': 5
    
 
 }
@@ -238,3 +257,12 @@ JET_SIDE_MENU_COMPACT = True
 JET_INDEX_DASHBOARD = 'backend.dashboard.CustomIndexDashboard'
 import os
 # JET_MODULE_GOOGLE_ANALYTICS_CLIENT_SECRETS_FILE = os.path.join(BASE_DIR, 'client_secrets.json')
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}

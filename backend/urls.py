@@ -19,17 +19,38 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import url
 from django.views.static import serve
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Multi User Blog API",
+      default_version='v1',
+      description="Blog Api description",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
 
 admin.site.site_title="Learn More"
+
 
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),
     path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  
     path('blog-api/',include("blog.urls")),
     path('admin/', admin.site.urls),
-    url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
+    path('media/(?P<path>.*)/', serve,{'document_root': settings.MEDIA_ROOT}),
 
-    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
+    path('static/(?P<path>.*)/', serve,{'document_root': settings.STATIC_ROOT}),
+    path('swagger(?P<format>\.json|\.yaml)/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     
 ]
 if settings.DEBUG:

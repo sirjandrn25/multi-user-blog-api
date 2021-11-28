@@ -13,8 +13,12 @@ class DateTimePicker(models.Model):
 class Category(models.Model):
     c_name = models.CharField(max_length=150)
     
+    class Meta:
+        ordering = ['-id']
+        
     def __str__(self):
         return self.c_name
+        
 
 class Tutorial(models.Model):
     name = models.CharField(max_length=150)
