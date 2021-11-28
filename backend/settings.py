@@ -110,11 +110,11 @@ environ.Env.read_env()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('POSTGRES_DB_NAME'),
-        'USER': env('POSTGRES_USER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': env('POSTGRES_HOST'),
-        'PORT': env('POSTGRES_PORT'),
+        'NAME': env('d2d9s2ialr3ehn'),
+        'USER': env('nbwsguefmvcfwm'),
+        'PASSWORD': env('c9e509ab7b0d751a03cbfb13fece052bbd92b846e0e916c36cd702a943794f07'),
+        'HOST': env('ec2-52-7-30-112.compute-1.amazonaws.com'),
+        'PORT': env('5432'),
     }
 }
 
