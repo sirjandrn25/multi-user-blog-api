@@ -98,25 +98,25 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-import os
-import environ
+# import os
+# import environ
 
-env = environ.Env()
-# reading .env file
-environ.Env.read_env()
-#...
+# env = environ.Env()
+# # reading .env file
+# environ.Env.read_env()
+# #...
 
-'''we will set all these environment variables in heroku dashboard later on'''
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('d2d9s2ialr3ehn'),
-        'USER': env('nbwsguefmvcfwm'),
-        'PASSWORD': env('c9e509ab7b0d751a03cbfb13fece052bbd92b846e0e916c36cd702a943794f07'),
-        'HOST': env('ec2-52-7-30-112.compute-1.amazonaws.com'),
-        'PORT': env('5432'),
-    }
-}
+# '''we will set all these environment variables in heroku dashboard later on'''
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': env('d2d9s2ialr3ehn'),
+#         'USER': env('nbwsguefmvcfwm'),
+#         'PASSWORD': env('c9e509ab7b0d751a03cbfb13fece052bbd92b846e0e916c36cd702a943794f07'),
+#         'HOST': env('ec2-52-7-30-112.compute-1.amazonaws.com'),
+#         'PORT': env('5432'),
+#     }
+# }
 
 # DATABASES = {
 #     'default': {
@@ -130,15 +130,15 @@ DATABASES = {
 # }
 
 
-# import dj_database_url
-# DATABASES = {}
+import dj_database_url
+DATABASES = {}
 # if DEBUG:
 #     DATABASES['default']={
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': os.path.join(BASE_DIR, 'sqlite3.db'),
 #     }
 # else:
-#     DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 
 # Password validation
