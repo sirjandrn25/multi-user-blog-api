@@ -94,7 +94,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-DATABASE_URL="sqlite:///db.sqlite3"
+# DATABASE_URL="sqlite:///db.sqlite3"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
