@@ -68,7 +68,7 @@ class ProfileApiView(GenericAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     def get(self,request):
-        serializer = self.serializer_class(request.user.profile)
+        serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
     

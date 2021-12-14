@@ -9,7 +9,8 @@ from django.db.models import Q
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['first_name','last_name','contact_no','address','gender','birth_date']
+        fields = ['first_name','last_name','contact_no','avatar','address','gender','birth_date','follower']
+        read_only_fields = ['avatar','follower']
     
     def validate(self,validated_data):
 
@@ -18,8 +19,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             errors = {
                 'contact_no':['only numeric values are allowed']
             }
-        elif len(contact_no)==10:
-            errrors = {
+        elif len(contact_no) !=10:
+            errors = {
                 'contact_no':['10 digits are required']
             }
         else:
@@ -31,7 +32,7 @@ class UpdateAvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['avatar']
-        
+
 
         
 class UserSerializer(serializers.ModelSerializer):
@@ -40,7 +41,7 @@ class UserSerializer(serializers.ModelSerializer):
     # posts = PostSerializer(many=True,read_only=True)
     class Meta:
         model = User
-        fields=['id','username','email','last_login','profile']
+        fields=['id','username','email','last_login','profile','is_superuser','is_active','is_staff']
         read_only_fields = ['id','password','username']
         ordering = ['id']
   
