@@ -161,7 +161,8 @@ class UserLogoutApiView(GenericAPIView):
 
 class ChangePasswordApiView(GenericAPIView):
     serializer_class = PassworChangeSerializer
-
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def put(self,request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
