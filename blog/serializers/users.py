@@ -85,47 +85,39 @@ class UserLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError(errors)
 
 
-class UserRegisterSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    email = serializers.EmailField()
-    password = serializers.CharField()
-    re_password = serializers.CharField()
+class UserRegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username','email','password']
 
     def validate(self,validated_data):
-        username = validated_data.get('username','')
-        email = validated_data.get('email','')
-        password = validated_data.get('password','')
-        re_password = validated_data.get('re_password','')
-
-        if username and password and email and re_password:
-            if User.objects.filter(username=username).first() is None:
-                if password != re_password:
-                    errors = {
-                        're_password':["both password is not matched"]
-                    }
-                elif password.isdigit():
-                    errors = {
-                        'password':['only numeric values are not allowed']
-                    }
-                elif len(password)<8:
-                    errors = {
-                        'password':['at least 8 charecters are required']
-                    }
-                else:
-                    user = User(username=username,email=email,password=make_password(password))
-                    user.save()
-                    validated_data['user'] = user
-                    return validated_data
-            else:
-                errors = {
-                    'username':['this username is alredy exist']
-                }
-                
-        else:
+        password = validated_data.get('password')
+        if password.isdigit():
             errors = {
-                'username':['this field is required'],
-                'email':['this field is required'],
-                'password':['this field is required'],
-                're_password':['this field is required']
+                'password':["only numeric values are not allowed"]
             }
+        elif len(password)<8:
+            errors = {
+                'password':["atleast 8 charecters are required"]
+            }
+        else:
+            validated_data['password'] = make_password(password)
+            return validated_data
         raise serializers.ValidationError(errors)
+
+class PassworChangeSerializer(serializers.Serializer):
+    old_password = serializers.CharField()
+    new_password = serializers.CharField(min_length=8)
+
+    def validate(self,validated_data):
+        new_password = validated_data.get('old_password')
+        if new_password.isdigit():
+            errors = {
+                "old_password":["only numeric values not allowed"]
+            }
+        else:
+            validated_data['new_password'] = make_password(new_password)
+            return validated_data
+
+
+    

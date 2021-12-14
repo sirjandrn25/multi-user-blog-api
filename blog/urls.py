@@ -43,6 +43,7 @@ urlpatterns = [
     path("accounts/user_register/",users.UserRegisterApiView.as_view()),
     path("accounts/me/profile/",users.ProfileApiView.as_view()),
     path("accounts/me/update_avatar/",users.UpdateAvatarApiView.as_view()),
+    path("accounts/me/change_password/",users.ChangePasswordApiView.as_view()),
     # path("upload-avatar/",UploadAvatarApiView.as_view()),
     path('accounts/user_refresh_token/', TokenRefreshView.as_view(), name='token_refresh'),
   
