@@ -35,9 +35,9 @@ SECRET_KEY = 'django-insecure-e1%)wg3$68w@a#923$0tb70^%o46sh*g0i*(w=6c7&e6y5l(pa
 # SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
-ALLOWED_HOSTS = ["blog-api7991.herokuapp.com","localhost"]
+DEBUG = True
+# "blog-api7991.herokuapp.com",
+ALLOWED_HOSTS = ["localhost"]
 # ,
 
 # Application definition
@@ -94,51 +94,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# DATABASE_URL="sqlite:///db.sqlite3"
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# import os
-# import environ
-
-# env = environ.Env()
-# # reading .env file
-# environ.Env.read_env()
-# #...
-
-# '''we will set all these environment variables in heroku dashboard later on'''
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': env('d2d9s2ialr3ehn'),
-#         'USER': env('nbwsguefmvcfwm'),
-#         'PASSWORD': env('c9e509ab7b0d751a03cbfb13fece052bbd92b846e0e916c36cd702a943794f07'),
-#         'HOST': env('ec2-52-7-30-112.compute-1.amazonaws.com'),
-#         'PORT': env('5432'),
-#     }
-# }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'blog_django',
-#         'USER': 'myuser',
-#         'PASSWORD': 'mypass',
-#         'HOST': 'localhost',
-#         'PORT': '5433',
-#     }
-# }
-
-
-import dj_database_url
-DATABASES = {}
-# if DEBUG:
-#     DATABASES['default']={
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'sqlite3.db'),
-#     }
-# else:
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'blogApi',
+        'USER': 'blog',
+        'PASSWORD': 'meronaam54',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
 
 
 # Password validation
@@ -266,3 +232,6 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+
+AUTH_USER_MODEL='blog.User'

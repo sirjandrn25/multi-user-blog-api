@@ -1,7 +1,7 @@
+from blog.serializers.users import UpdateAvatarSerializer
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from ..models.user import Profile
-from django.contrib.auth.models import User
+from ..models.user import Profile,User
 from ..serializers import UserSerializer,UserLoginSerializer,UserRegisterSerializer,ProfileSerializer,RefreshTokenSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAuthenticated
@@ -61,6 +61,34 @@ class UserApiView(ModelViewSet):
 
 
 
+
+class ProfileApiView(GenericAPIView):
+    serializer_class = ProfileSerializer
+    
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+        serializer = self.serializer_class(request.user.profile)
+        return Response(serializer.data)
+
+    
+    def put(self,request):
+        serializer = self.serializer_class(data=request.data,instance=request.user.profile,partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=400)
+
+class UpdateAvatarApiView(GenericAPIView):
+    serializer_class = UpdateAvatarSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def patch(self,request):
+        serializer = self.serializer_class(data=request.data,instance=request.user.profile,partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=400)
 
 
 

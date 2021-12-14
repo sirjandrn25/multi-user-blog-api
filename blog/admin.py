@@ -2,13 +2,13 @@ from django.contrib import admin
 
 from django.utils.html import format_html
 from django.contrib.admin import AdminSite
-from django.contrib.auth.models import User
+from .models.user import User
 
 from django.contrib.auth.admin import UserAdmin
 from .models import *
 
 
-# @admin.register(User)
+admin.site.register(User)
 admin.AdminSite.site_header=format_html("<h3>Learn More</h3>")
 
 class MyAdminSite(AdminSite):
@@ -43,25 +43,11 @@ class PostAdmin(admin.ModelAdmin):
 class ProfileInline(admin.StackedInline):
     model = Profile
 
-class CustomUserAdmin(UserAdmin):
-    list_display = ['username','email','full_name','gender','is_active']
-    inlines=[ProfileInline]
-    list_filter = ['is_superuser','is_staff','is_active','profile__gender',]
-    search_fields = ['username','first_name','last_name']
 
-
-    @admin.display
-    def full_name(self,obj):
-        return f"{obj.first_name} {obj.last_name}"
-    
-    @admin.display
-    def gender(self,obj):
-        return obj.profile.gender
-    
     
 
-admin.site.unregister(User)
-admin.site.register(User, CustomUserAdmin)
+
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['id','user','content','post','created_at']
