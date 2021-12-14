@@ -35,9 +35,9 @@ SECRET_KEY = 'django-insecure-e1%)wg3$68w@a#923$0tb70^%o46sh*g0i*(w=6c7&e6y5l(pa
 # SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 # "blog-api7991.herokuapp.com",
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["blog-api7991.herokuapp.com","localhost"]
 # ,
 
 # Application definition
@@ -95,16 +95,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'blogApi',
-        'USER': 'blog',
-        'PASSWORD': 'meronaam54',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'blogApi',
+#         'USER': 'blog',
+#         'PASSWORD': 'meronaam54',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
+import dj_database_url
+DATABASES = {}
+
+DATABASES['default'] = dj_database_url.config(
+    default='postgres://lqbsbufyonxnnf:9d9f7b7bd1f37c38e8ac9b79d17e9097cab52e6f96d9ef9c709c4753db78b37a@ec2-34-233-214-228.compute-1.amazonaws.com:5432/dfalodketodh2a',
+)
 
 
 # Password validation
