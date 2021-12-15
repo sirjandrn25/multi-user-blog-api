@@ -27,21 +27,32 @@ class CommentApiView(ModelViewSet):
         self.check_object_permissions(self.request, obj)
         return obj
 
-    def get_serializer(self,*args,**kwargs):
-        kwarg_list = list(kwargs.keys())
-        if kwargs.keys() and 'many' not in kwarg_list:
-            # kwargs['data']._mutable = True
-            if self.request.method == 'POST':
-                try:
-                    kwargs['data']['user'] = self.request.user.id
-                except Exception as e:
+    # add current user
+    # def get_serializer(self,*args,**kwargs):
+    #     kwarg_list = list(kwargs.keys())
+    #     if kwargs.keys() and 'many' not in kwarg_list:
+    #         # kwargs['data']._mutable = True
+    #         if self.request.method == 'POST':
+    #             try:
+    #                 kwargs['data']['user'] = self.request.user.id
+    #             except Exception as e:
                 
-                    kwargs['data']._mutable = True
-                    kwargs['data']['user'] = self.request.user.id
-            else:
-                obj = self.get_object()
-                kwargs['data']['user'] = obj.user.id
-        return super(CommentApiView,self).get_serializer(*args,**kwargs)
+    #                 kwargs['data']._mutable = True
+    #                 kwargs['data']['user'] = self.request.user.id
+    #         else:
+    #             obj = self.get_object()
+    #             kwargs['data']['user'] = obj.user.id
+    #     return super(CommentApiView,self).get_serializer(*args,**kwargs)
+
+
+    def create(self,request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user)
+            return Response(serializer.data,status=201)
+        return Response(serializer.errors,status=400)
+    
+
     
     @action(detail=True,methods=['get'])
     def replies(self,request,pk=None):

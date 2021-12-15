@@ -1,8 +1,9 @@
 from ..models.post import *
-from rest_framework import serializers
+from rest_framework import request, serializers
 
 from django.contrib.auth.hashers import check_password,make_password
 from django.db.models import Q
+from .users import UserSerializer
 
 
 
@@ -14,11 +15,19 @@ class ReplySerializer(serializers.ModelSerializer):
     def get_user_detail(self,obj):
         user = User.objects.get(id=obj.user.id)
         serializer = UserSerializer(user,many=False)
-        return serializer.data
+        avatar = ''
+        if user.profile.avatar:
+            avatar = user.profile.avatar.url
+        data = {
+            'id':user.id,
+            'useraname':user.username,
+            'avatar':avatar
+        }
+        return data
     
     class Meta:
         model = Reply
-        fields = ['id','content','created_at','comment','user','user_detail']
+        fields = ['id','content','created_at','comment','user_detail']
         read_only_fields = ['id','user_detail']
 
 
@@ -36,10 +45,20 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def get_user_detail(self,obj):
         user = User.objects.get(id=obj.user.id)
-        serializer = UserSerializer(user,many=False)
-        return serializer.data
+        avatar=''
+        if user.profile.avatar:
+            avatar = user.profile.avatar.url
+        data = {
+            'id':user.id,
+            'useraname':user.username,
+            'avatar':avatar
+        }
+        return data
    
     class Meta:
         model = Comment
-        fields = ['id','content','created_at','post','user','user_detail','replies']
+        fields = ['id','content','created_at','post','user_detail','replies']
         read_only_fields = ["id",'user_detail','replies']
+
+    def create(self,validated_data):
+        return Comment.objects.create(**validated_data)
