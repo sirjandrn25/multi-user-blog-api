@@ -29,6 +29,10 @@ class ReplySerializer(serializers.ModelSerializer):
         model = Reply
         fields = ['id','content','created_at','comment','user_detail']
         read_only_fields = ['id','user_detail']
+    
+    def create(self,validated_data):
+        return Reply.objects.create(**validated_data)
+        
 
 
     

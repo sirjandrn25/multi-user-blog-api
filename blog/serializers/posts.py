@@ -49,12 +49,19 @@ class TutorialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tutorial
         fields = "__all__"
-        read_only_fields = ['id']
+        read_only_fields = ['id','user']
 
+class AddRemovePostInTutorial(serializers.ModelSerializer):
+    # post_ids = serializers.ListField(child=serializers.IntegerField(min_value=1,max_value=100))
+    class Meta:
+        model = Tutorial
+        fields = ['posts']
 
+    
+    
 
 class CategorySerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Category
         fields = "__all__"
