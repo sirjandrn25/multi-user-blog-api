@@ -24,7 +24,7 @@ admin_site = MyAdminSite()
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     exclude = ['likes']
-    list_display = ['title','user','category','total_likes','total_views','created_at']
+    list_display = ['title','user','category','total_likes','views','created_at']
     date_hierarchy = 'created_at'
 
     list_filter = [
@@ -36,8 +36,7 @@ class PostAdmin(admin.ModelAdmin):
     def total_likes(self,obj):
         return len(obj.likes.all())
     @admin.display
-    def total_views(self,obj):
-        return len(obj.views.all())
+    
 
     
 class ProfileInline(admin.StackedInline):
