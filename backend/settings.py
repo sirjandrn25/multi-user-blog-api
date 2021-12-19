@@ -102,7 +102,7 @@ DATABASES = {}
 import dj_database_url
 
 DATABASES['default'] = dj_database_url.config(
-    default='postgres://ehdynkovhhrfcb:ed4779779fcda203bd84a72d66d0c628d2598c14331084e2d2f2d9ce0aaececf@ec2-52-4-197-13.compute-1.amazonaws.com:5432/d1s4vu5n37dgti',
+    default='postgres://eiokenkxljsyzx:fb239d2fe86935d1ce7f2cd0d8e3e29c57c67bbaf355023520f48b31bc417eb4@ec2-54-156-121-167.compute-1.amazonaws.com:5432/d4d2dp04q0r5bj',
 )
 
 
