@@ -35,7 +35,7 @@ class PostAdmin(admin.ModelAdmin):
     @admin.display
     def total_likes(self,obj):
         return len(obj.likes.all())
-    @admin.display
+   
     
 
     
