@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-from decouple import config
+
 # import environ
 
 # env = environ.Env()
@@ -20,8 +20,7 @@ from decouple import config
 # reading .env file
 # environ.Env.read_env()
 #...
-#...rest will be same
-SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -101,9 +100,9 @@ DATABASES = {}
 
 import dj_database_url
 
-DATABASES['default'] = dj_database_url.config(
-    default='postgres://eiokenkxljsyzx:fb239d2fe86935d1ce7f2cd0d8e3e29c57c67bbaf355023520f48b31bc417eb4@ec2-54-156-121-167.compute-1.amazonaws.com:5432/d4d2dp04q0r5bj',
-)
+
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation
