@@ -31,12 +31,13 @@ class Tutorial(models.Model):
 
 class Post(DateTimePicker):
     title = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.CharField(max_length=300)
+    body = models.TextField()
     thumbnail = models.ImageField(upload_to="posts",blank=True,null=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="posts")
     category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name="posts")
     likes = models.ManyToManyField(User,blank=True,related_name="likes")
-    views = models.ManyToManyField(User,blank=True,related_name="views")
+    views = models.IntegerField(default=0)
     tutorial = models.ForeignKey(Tutorial,on_delete=models.CASCADE,related_name="posts",null=True)
 
     def __str__(self):

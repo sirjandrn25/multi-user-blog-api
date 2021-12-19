@@ -9,6 +9,11 @@ from ..models.user import Profile, User
 
 
 
+class PostDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = "__all__"
+
 class PostSerializer(serializers.ModelSerializer):
     
     comments=serializers.SerializerMethodField()
@@ -17,6 +22,7 @@ class PostSerializer(serializers.ModelSerializer):
     def get_comments(self,obj):
         comments = Comment.objects.filter(post=obj)
         return len(comments)
+    
     def get_user_detail(self,obj):
         user = User.objects.get(id=obj.user.id)
         avatar = ''
@@ -40,7 +46,7 @@ class PostSerializer(serializers.ModelSerializer):
     
     
 
-    
+
     
     
 

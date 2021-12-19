@@ -1,3 +1,4 @@
+from blog.serializers.posts import PostDetailSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from ..permissions import IsPostOwnerOrIsAdmin,IsAdminOrReadOnly
@@ -11,32 +12,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-
-# class PostApiView(ModelViewSet):
-#     serializer_class = PostSerializer
-#     queryset = Post.objects.all()
-#     authentication_classes = [JWTAuthentication]
-#     permission_classes = [IsAuthenticatedOrReadOnly,IsPostOwnerOrIsAdmin]
-#     filter_backends = [DjangoFilterBackend,filters.SearchFilter]
-#     filterset_fields = ['category','tutorial']
-#     search_fields = ['title', 'description','user__username']
-
-#     pagination_class = MyPageNumberPagination
-
-#     def create(self,request):
-
-#         # return Response()
-#         serializer = PostSerializer(data=request.data)
-        
-#         if serializer.is_valid(raise_exception=True):
-#             serializer.save(user=request.user)
-
-#             return Response(serializer.data,status=201)
-#         return Response(serializer.errors,status=400)
-    
-
-    
 
 
 
@@ -60,26 +35,14 @@ class PostApiView(ModelViewSet):
         self.check_object_permissions(self.request, obj)
         return obj
 
-    # user add dynamically in serailizer 
-    # def get_serializer(self,*args,**kwargs):
-    #     kwarg_list = list(kwargs.keys())
+    def retrieve(self,request,pk):
+        post = self.get_object()
+        post.views +=1
+        post.save()
+        serializer = PostDetailSerializer(post)
+        return Response(serializer.data)
         
-    #     print("seraializer")
-    #     if kwargs.keys() and 'many' not in kwarg_list:
-    #         # kwargs['data']._mutable = True
-    #         if self.request.method == 'POST':
-    #             try:
-    #                 kwargs['data']['user'] = self.request.user.id
-    #             except Exception as e:
-    #                 print(e)
-    #                 kwargs['data']._mutable = True
-    #                 kwargs['data']['user'] = self.request.user.id
-    #             print(kwargs)
-    #         else:
-    #             obj = self.get_object()
-                
-    #             kwargs['data']['user'] = obj.user.id
-    #     return super(PostApiView,self).get_serializer(*args,**kwargs)
+
 
     def create(self,request):
 
@@ -119,18 +82,7 @@ class PostApiView(ModelViewSet):
         return Response(serializer.data)
         
     
-    @action(detail=True, methods=['put','get'])
-    def views(self,request,pk=None):
-
-        post = get_object_or_404(Post.objects.all(),pk=pk)
-
-        if request.method == 'PUT':
-            post.views.add(request.user)
-            return Response(status=200)
-        elif request.method == 'GET':
-            users = post.views.all()
-            serializer = UserSerializer(users,many=True)
-            return Response(serializer.data)
+    
     
     
     
