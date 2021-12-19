@@ -1,4 +1,4 @@
-from blog.serializers.users import PassworChangeSerializer, UpdateAvatarSerializer
+from blog.serializers.users import EmailVerifySerializer, PassworChangeSerializer, UpdateAvatarSerializer, UsernameVerifySerializer,UsernameOrEmailVerifySerializer
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from ..models.user import Profile,User
@@ -171,5 +171,37 @@ class ChangePasswordApiView(GenericAPIView):
                 return Response({"old_password":"old password does not match"},status=400)
             request.user.password = serializer.validated_data.get('new_password')
             request.user.save()
+            return Response()
+        return Response(serializer.errors,status=400)
+
+
+
+
+class EmailVerifyApiView(GenericAPIView):
+    serializer_class = EmailVerifySerializer
+
+    def post(self,request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            return Response()
+        return Response(serializer.errors,status=400)
+
+
+class UsernameVerifyApiView(GenericAPIView):
+    serializer_class = UsernameVerifySerializer
+
+    def post(self,request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            return Response()
+        return Response(serializer.errors,status=400)
+
+
+class UsernameOrEmailVerifyApiView(GenericAPIView):
+    serializer_class = UsernameOrEmailVerifySerializer
+
+    def post(self,request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
             return Response()
         return Response(serializer.errors,status=400)

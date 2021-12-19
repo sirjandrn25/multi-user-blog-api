@@ -47,7 +47,7 @@ class Post(DateTimePicker):
     def autocomplete_search_fields():
         return 'title', 'user__name'
     class Meta:
-        ordering = ['id']
+        ordering = ['-id']
 
     
 

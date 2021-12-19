@@ -10,15 +10,42 @@ from ..models.user import Profile, User
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
+    previous_post = serializers.SerializerMethodField()
+    next_post = serializers.SerializerMethodField()
+    
+    def get_previous_post(self,obj):
+        thumbnail = ''
+        if obj.thumbnail:
+            thumbnail = obj.thumbnail.url
+        data ={
+            'id':obj.id,
+            'title':obj.title,
+            'thumbnail':thumbnail
+            
+        }
+        return data
+    def get_next_post(self,obj):
+        thumbnail = ''
+        if obj.thumbnail:
+            thumbnail = obj.thumbnail.url
+        data = {
+            'id':obj.id,
+            'title':obj.title,
+            'thumbnail':thumbnail
+        }
+        return data
     class Meta:
         model = Post
-        fields = "__all__"
+        fields = ['id','title','description','body','thumbnail','category','user','likes','previous_post','next_post','views','created_at','updated_at']
+       
 
 class PostSerializer(serializers.ModelSerializer):
     
     comments=serializers.SerializerMethodField()
     user_detail = serializers.SerializerMethodField()
-        
+    
+    
+    
     def get_comments(self,obj):
         comments = Comment.objects.filter(post=obj)
         return len(comments)
@@ -38,8 +65,13 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id','title','description','thumbnail','category','user_detail','comments','likes','views','created_at','updated_at']
+        fields = ['id','title','description','body','thumbnail','category','user_detail','comments','likes','views','created_at','updated_at']
+
         read_only_fields = ['id','user_detail','comments','created_at','updated_at','likes','views']
+        extra_kwargs = {
+            'body':{'write_only':True}
+        }
+        
     
     def create(self,validated_data):
         return Post.objects.create(**validated_data)

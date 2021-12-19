@@ -39,9 +39,11 @@ class PostApiView(ModelViewSet):
         post = self.get_object()
         post.views +=1
         post.save()
+        
         serializer = PostDetailSerializer(post)
         return Response(serializer.data)
-        
+
+
 
 
     def create(self,request):
@@ -63,7 +65,13 @@ class PostApiView(ModelViewSet):
             serializer.save()
             return Response()
         return Response(serializer.errors,status=400)
-
+    
+    @action(detail=False,methods=['get'])
+    def top_posts(self,request,pk=None):
+        
+        posts = Post.objects.filter(id__range=[len(self.queryset)-4,len(self.queryset)])
+        serializer = PostSerializer(posts,many=True)
+        return Response(serializer.data)
     
 
     @action(detail=True, methods=['put','get'])

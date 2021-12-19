@@ -33,6 +33,9 @@ urlpatterns = [
     path("accounts/me/change_password/",users.ChangePasswordApiView.as_view()),
     # path("upload-avatar/",UploadAvatarApiView.as_view()),
     path('accounts/user_refresh_token/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('accounts/email-verify/',users.EmailVerifyApiView.as_view()),
+    path("accounts/username-verify/",users.UsernameVerifyApiView.as_view()),
+    path("accounts/username_or_email-verify/",users.UsernameOrEmailVerifyApiView.as_view())
   
 
 ]

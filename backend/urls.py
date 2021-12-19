@@ -43,7 +43,7 @@ admin.site.site_title="Learn More"
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),
     path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  
-    path('blog-api/',include("blog.urls")),
+    path('api/v1/',include("blog.urls")),
     path('admin/', admin.site.urls),
     path('media/(?P<path>.*)/', serve,{'document_root': settings.MEDIA_ROOT}),
 

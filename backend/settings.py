@@ -95,18 +95,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'blogApi',
-#         'USER': 'blog',
-#         'PASSWORD': 'meronaam54',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
-# import dj_database_url
-DATABASES = {}
+
 
 
 DATABASES = {

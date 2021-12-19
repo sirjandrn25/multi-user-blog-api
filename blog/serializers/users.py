@@ -1,8 +1,10 @@
 
+from blog.models.post import Post
 from rest_framework import serializers
-from ..models.user import User,Profile
+from ..models.user import Social, User,Profile
 from django.contrib.auth.hashers import check_password,make_password
 from django.db.models import Q
+
 
 
 
@@ -34,16 +36,51 @@ class UpdateAvatarSerializer(serializers.ModelSerializer):
         fields = ['avatar']
 
 
+def get_postSerializer(post):
+    thumbnail = ''
+    if post.thumbnail:
+        thumbnail = post.thumbnail.url
+    
+    data = {
+        'id':post.id,
+        'title':post.title,
+        'description':post.description,
+        'thumbnail':thumbnail,
+        'created_at':post.created_at
+        
+    }
+    return data
+    
         
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True,many=False)
-    # tutorials = TutorialSerializer(read_only=True,many=True)
-    # posts = PostSerializer(many=True,read_only=True)
+    posts = serializers.SerializerMethodField()
+    social = serializers.SerializerMethodField()
+    def get_posts(self,obj):
+        posts = Post.objects.filter(user=obj)[:5]
+        
+        data = {
+            'total_posts':len(posts),
+            'recent_posts': [get_postSerializer(post) for post in posts]
+            
+        }
+        return data
+    
+    def get_social(self,obj):
+        social = Social.objects.filter(user=obj).first()
+        if social:
+            return {
+                'facebook':social.facebook,
+                'twitter':social.twitter,
+                'instagram':social.instagram
+            }
+        return social
+    
     class Meta:
         model = User
-        fields=['id','username','email','last_login','profile','is_superuser','is_active','is_staff']
-        read_only_fields = ['id','password','username']
-        ordering = ['id']
+        fields=['id','username','email','last_login','profile','is_superuser','is_active','is_staff','social','posts']
+        read_only_fields = ['id','password','username','posts','social']
+        
   
 
 class RefreshTokenSerializer(serializers.Serializer):
@@ -120,4 +157,43 @@ class PassworChangeSerializer(serializers.Serializer):
             return validated_data
 
 
+    
+
+
+class EmailVerifySerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate(self,validated_data):
+        email = validated_data.get('email')
+        if User.objects.filter(email=email).first():
+            return validated_data
+        errors = {
+            'email':[f'this email does not exist']
+        }
+        raise serializers.ValidationError(errors)
+
+class UsernameVerifySerializer(serializers.Serializer):
+    username = serializers.CharField()
+
+    def validate(self,validated_data):
+        username = validated_data.get('username')
+        print(User.objects.filter(username=username).first())
+        if User.objects.filter(username=username).first():
+            return validated_data
+        errors = {
+            'username':[f'this username does not exist']
+        }
+        raise serializers.ValidationError(errors)
+
+class UsernameOrEmailVerifySerializer(serializers.Serializer):
+    email_or_username = serializers.CharField()
+
+    
+
+    def validate(self,validated_data):
+        email_or_username = validated_data.get('email_or_username')
+
+        if User.objects.filter(Q(username = email_or_username) | Q(email=email_or_username)).first():
+            return validated_data
+        raise serializers.ValidationError({'email_or_username':['email or username does not exists']})
     
