@@ -105,12 +105,20 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 #         'PORT': '3306',
 #     }
 # }
-import dj_database_url
+# import dj_database_url
 DATABASES = {}
 
-DATABASES['default'] = dj_database_url.config(
-    default='postgres://lqbsbufyonxnnf:9d9f7b7bd1f37c38e8ac9b79d17e9097cab52e6f96d9ef9c709c4753db78b37a@ec2-34-233-214-228.compute-1.amazonaws.com:5432/dfalodketodh2a',
-)
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+# DATABASES['default'] = dj_database_url.config(
+#     default='postgres://lqbsbufyonxnnf:9d9f7b7bd1f37c38e8ac9b79d17e9097cab52e6f96d9ef9c709c4753db78b37a@ec2-34-233-214-228.compute-1.amazonaws.com:5432/dfalodketodh2a',
+# )
 
 
 # Password validation
