@@ -11,7 +11,7 @@ from django.db.models import Q
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['first_name','last_name','contact_no','avatar','address','gender','birth_date','follower']
+        fields = ['first_name','last_name','contact_no','avatar','address','gender','birth_date','follower','description']
         read_only_fields = ['avatar','follower']
     
     def validate(self,validated_data):
