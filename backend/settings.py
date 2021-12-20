@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-DEBUG = True
+DEBUG = False
 # "blog-api7991.herokuapp.com",
 ALLOWED_HOSTS = ["blog2-api7991.herokuapp.com","localhost"]
 # ,
