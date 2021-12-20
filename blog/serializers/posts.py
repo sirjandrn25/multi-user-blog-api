@@ -14,6 +14,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     next_post = serializers.SerializerMethodField()
     user = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
     def get_previous_post(self,obj):
         thumbnail = ''
         if obj.thumbnail:
