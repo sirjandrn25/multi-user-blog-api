@@ -12,7 +12,8 @@ from ..models.user import Profile, User
 class PostDetailSerializer(serializers.ModelSerializer):
     previous_post = serializers.SerializerMethodField()
     next_post = serializers.SerializerMethodField()
-    
+    user = serializers.SerializerMethodField()
+    category = serializers.SerializerMethodField()
     def get_previous_post(self,obj):
         thumbnail = ''
         if obj.thumbnail:
@@ -20,7 +21,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
         data ={
             'id':obj.id,
             'title':obj.title,
-            'thumbnail':thumbnail
+            'thumbnail':thumbnail,
+            'created_at':obj.created_at
             
         }
         return data
@@ -31,12 +33,41 @@ class PostDetailSerializer(serializers.ModelSerializer):
         data = {
             'id':obj.id,
             'title':obj.title,
-            'thumbnail':thumbnail
+            'thumbnail':thumbnail,
+            'created_at':obj.created_at
         }
         return data
+    
+    def get_user(self,obj):
+        full_name = f"{obj.user.profile.first_name} {obj.user.profile.last_name}"
+        if full_name == " ":
+            full_name = obj.user.username
+        avatar = ''
+        if obj.user.profile.avatar:
+            avatar=obj.user.profile.avatar.url
+        
+        data = {
+            'id':obj.user.id,
+            'full_name':full_name,
+            'avatar':avatar,
+            'description':obj.user.profile.description
+        }
+        return data
+    def get_category(self,obj):
+        data = {
+            'id':obj.category.id,
+            'category_name':obj.category.c_name
+        }
+        return data
+    
+
+    def get_comments(self,obj):
+        comments = Comment.objects.filter(post=obj)
+        return len(comments)
+
     class Meta:
         model = Post
-        fields = ['id','title','description','body','thumbnail','category','user','likes','previous_post','next_post','views','created_at','updated_at']
+        fields = ['id','title','description','body','thumbnail','category','user','likes','previous_post','next_post','views','comments','created_at','updated_at']
        
 
 class PostSerializer(serializers.ModelSerializer):

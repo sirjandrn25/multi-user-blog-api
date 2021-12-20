@@ -104,6 +104,7 @@ class Profile(models.Model):
     birth_date = models.DateField(blank=True,null=True)
     gender = models.CharField(max_length=10,choices=gender_choices,default=gender_choices[0][1])
     follower = models.ManyToManyField(User,blank=True,related_name="followers")
+    description = models.CharField(max_length=300,blank=True)
 
     def __str__(self):
         return self.user.username
