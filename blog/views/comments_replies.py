@@ -28,7 +28,7 @@ class CommentApiView(ModelViewSet):
         return obj
 
 
-    @action(detail=True,methods=['put'],permission_classes=[IsAuthenticatedOrReadOnly],serializer_class=None)
+    @action(detail=True,methods=['put'],permission_classes=[IsAuthenticatedOrReadOnly])
     def update_visible(self,request,pk):
         comment = self.get_object()
         if comment.post.user == request.user:
