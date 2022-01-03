@@ -97,7 +97,10 @@ class PostApiView(ModelViewSet):
     @action(detail=True,methods=['get'])
     def comments(self,request,pk=None):
         post = get_object_or_404(Post.objects.all(),pk=pk)
-        comments = Comment.objects.filter(post=post)
+        if request.user.is_authenticated and request.user == post.user:
+            comments = Comment.objects.filter(post=post)
+        else:
+            comments = Comment.objects.filter(post=post,is_visible=True)
         serializer = CommentSerializer(comments,many=True)
         return Response(serializer.data,status=200)
 

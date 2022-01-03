@@ -54,10 +54,20 @@ class Post(DateTimePicker):
 
 
 class Comment(DateTimePicker):
+    user_types_choices = (
+        ('guest','Guest'),
+        ('regualar','Regular')
+    )
     content = models.TextField()
-    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="comments")
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="comments",null=True)
     post = models.ForeignKey(Post,on_delete=models.CASCADE,related_name="comments")
+    is_visible = models.BooleanField(default=False)
+    full_name = models.CharField(max_length=100,blank=True)
+    email = models.CharField(max_length=150,blank=True)
+    user_types = models.CharField(max_length=15,choices=user_types_choices)
 
+
+    
     class Meta:
         ordering = ['id']
 

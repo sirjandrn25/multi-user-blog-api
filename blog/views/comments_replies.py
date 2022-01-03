@@ -15,7 +15,7 @@ from rest_framework.decorators import action
 
 class CommentApiView(ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly,IsPostOwnerOrCommentOwnerOrIsAdmin]
+    permission_classes = [IsPostOwnerOrCommentOwnerOrIsAdmin]
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
     filter_backends = [DjangoFilterBackend,filters.SearchFilter]
@@ -26,6 +26,17 @@ class CommentApiView(ModelViewSet):
         obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
         self.check_object_permissions(self.request, obj)
         return obj
+
+
+    @action(detail=True,methods=['put'],permission_classes=[IsAuthenticatedOrReadOnly],serializer_class=None)
+    def update_visible(self,request,pk):
+        comment = self.get_object()
+        if comment.post.user == request.user:
+            comment.is_visible = (not comment.is_visible)
+            comment.save()
+            return Response()
+
+        return Response(status=401)
 
     # add current user
     # def get_serializer(self,*args,**kwargs):
@@ -44,11 +55,15 @@ class CommentApiView(ModelViewSet):
     #             kwargs['data']['user'] = obj.user.id
     #     return super(CommentApiView,self).get_serializer(*args,**kwargs)
 
+    
 
     def create(self,request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user)
+            if request.user.is_authenticated:
+                serializer.save(user=request.user,user_types="regular")
+            else:
+                serializer.save(user_types="guest")
             return Response(serializer.data,status=201)
         return Response(serializer.errors,status=400)
     
