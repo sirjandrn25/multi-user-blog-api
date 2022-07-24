@@ -1,5 +1,6 @@
 from django.db import models
 from .user import User
+from django_quill.fields import QuillField
 
 
 class DateTimePicker(models.Model):
@@ -12,13 +13,13 @@ class DateTimePicker(models.Model):
 
 
 class Category(models.Model):
-    c_name = models.CharField(max_length=150)
+    category_name = models.CharField(max_length=150)
     
     class Meta:
         ordering = ['-id']
         
     def __str__(self):
-        return self.c_name
+        return self.category_name
         
 
 class Tutorial(models.Model):
@@ -34,12 +35,13 @@ class Post(DateTimePicker):
     description = models.CharField(max_length=300)
     body = models.TextField()
     thumbnail = models.ImageField(upload_to="posts",blank=True,null=True)
+    # thumbnail = models.CharField(max_length=400)
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="posts")
     category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name="posts")
     likes = models.ManyToManyField(User,blank=True,related_name="likes")
     views = models.IntegerField(default=0)
-    tutorial = models.ForeignKey(Tutorial,on_delete=models.CASCADE,related_name="posts",null=True)
-
+    tutorial = models.ForeignKey(Tutorial,on_delete=models.CASCADE,related_name="posts",null=True,blank=True)
+    
     def __str__(self):
         return self.title
     

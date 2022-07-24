@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-DEBUG = False
+DEBUG = True
 # "blog-api7991.herokuapp.com",
 ALLOWED_HOSTS = ["blog2-api7991.herokuapp.com","localhost"]
 # ,
@@ -37,8 +37,8 @@ ALLOWED_HOSTS = ["blog2-api7991.herokuapp.com","localhost"]
 # Application definition
 
 INSTALLED_APPS = [
-    'jet.dashboard',
-    'jet',
+    # 'jet.dashboard',
+    # 'jet_django',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'blog.apps.BlogConfig',
     'django_filters',
+    'django_quill'
     
 ]
 
@@ -216,13 +217,13 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
-JET_SIDE_MENU_COMPACT = True
+# JET_SIDE_MENU_COMPACT = True
 # JET_INDEX_DASHBOARD = 'jet.dashboard.dashboard.DefaultIndexDashboard'
 # JET_APP_INDEX_DASHBOARD = 'jet.dashboard.dashboard.DefaultAppIndexDashboard'
 
 
 # JET_APP_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
-JET_INDEX_DASHBOARD = 'backend.dashboard.CustomIndexDashboard'
+# JET_INDEX_DASHBOARD = 'backend.dashboard.CustomIndexDashboard'
 import os
 # JET_MODULE_GOOGLE_ANALYTICS_CLIENT_SECRETS_FILE = os.path.join(BASE_DIR, 'client_secrets.json')
 SWAGGER_SETTINGS = {

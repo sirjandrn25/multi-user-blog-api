@@ -100,6 +100,7 @@ class Profile(models.Model):
     contact_no = models.CharField(max_length=10)
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="profile")
     avatar = models.ImageField(upload_to="avatar/",null=True,blank=True)
+    # avatar = models.CharField(max_length=400,blank=True,null=True)
     address = models.CharField(max_length=150,blank=True)
     birth_date = models.DateField(blank=True,null=True)
     gender = models.CharField(max_length=10,choices=gender_choices,default=gender_choices[0][1])

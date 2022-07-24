@@ -9,9 +9,6 @@ from .users import UserSerializer
 
 class ReplySerializer(serializers.ModelSerializer):
     user_detail = serializers.SerializerMethodField()
-
-        
-
     def get_user_detail(self,obj):
         user = User.objects.get(id=obj.user.id)
         if user.profile.avatar:
@@ -74,7 +71,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id','content','created_at','post','user_detail','replies','full_name','email','is_visible']
-        read_only_fields = ["id",'user_detail','replies','is_visible']
+        read_only_fields = ["id",'user_detail','replies']
         extra_kwargs = {
             'full_name':{'write_only':True},
             'email':{'write_only':True}

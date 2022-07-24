@@ -38,11 +38,12 @@ schema_view = get_schema_view(
 )
 
 admin.site.site_title="Learn More"
+# from jet_django.urls import jet_urls
 
 
 urlpatterns = [
-    path('jet/', include('jet.urls', 'jet')),
-    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  
+    # path('jet/', include('jet.urls', 'jet')),
+    # path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  
     path('api/v1/',include("blog.urls")),
     path('admin/', admin.site.urls),
     path('media/(?P<path>.*)/', serve,{'document_root': settings.MEDIA_ROOT}),

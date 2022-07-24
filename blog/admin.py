@@ -6,6 +6,7 @@ from .models.user import User
 
 from django.contrib.auth.admin import UserAdmin
 from .models import *
+from django_quill.fields import QuillField
 
 
 admin.site.register(User)
@@ -32,6 +33,7 @@ class PostAdmin(admin.ModelAdmin):
         
     ]
     search_fields = ['title','user__username']
+    body = QuillField()
     @admin.display
     def total_likes(self,obj):
         return len(obj.likes.all())
@@ -73,3 +75,5 @@ admin.site.register(Category)
 # admin.site.register(Comment)
 # admin.site.register(Reply)
 admin.site.register(Tutorial)
+admin.site.register(Profile)
+admin.site.register(Social)

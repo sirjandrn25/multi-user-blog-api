@@ -1,3 +1,5 @@
+from asyncio import constants
+from unicodedata import category
 from drf_yasg.openapi import Response
 from ..models.post import *
 from rest_framework import serializers
@@ -12,7 +14,7 @@ from ..models.user import Profile, User
 class PostDetailSerializer(serializers.ModelSerializer):
     previous_post = serializers.SerializerMethodField()
     next_post = serializers.SerializerMethodField()
-    user = serializers.SerializerMethodField()
+    user_detail = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     def get_previous_post(self,obj):
@@ -39,27 +41,22 @@ class PostDetailSerializer(serializers.ModelSerializer):
         }
         return data
     
-    def get_user(self,obj):
-        full_name = f"{obj.user.profile.first_name} {obj.user.profile.last_name}"
-        if full_name == " ":
-            full_name = obj.user.username
+    def get_user_detail(self,obj):
+        user = obj.user
+        print(user)
         avatar = ''
-        if obj.user.profile.avatar:
-            avatar=obj.user.profile.avatar.url
-        
+        if user.profile.avatar:
+            avatar = f"http://localhost:8000{user.profile.avatar.url}"
         data = {
-            'id':obj.user.id,
-            'full_name':full_name,
+            'id':user.id,
+            'username':user.username,
             'avatar':avatar,
-            'description':obj.user.profile.description
+            'followers':len(user.followers.all())
         }
         return data
     def get_category(self,obj):
-        data = {
-            'id':obj.category.id,
-            'category_name':obj.category.c_name
-        }
-        return data
+        
+        return obj.category.category_name
     
 
     def get_comments(self,obj):
@@ -68,40 +65,50 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id','title','description','body','thumbnail','category','user','likes','previous_post','next_post','views','comments','created_at','updated_at']
+        fields = ['id','title','description','body','thumbnail','category','user_detail','likes','previous_post','next_post','views','comments','created_at','updated_at']
        
 
 class PostSerializer(serializers.ModelSerializer):
     
     comments=serializers.SerializerMethodField()
     user_detail = serializers.SerializerMethodField()
-    
-    
+    likes = serializers.SerializerMethodField()
+    category_name = serializers.SerializerMethodField()
     
     def get_comments(self,obj):
         comments = Comment.objects.filter(post=obj)
         return len(comments)
     
+    def get_likes(self,obj):
+        
+        return len(obj.likes.all())
+    
+    def get_category_name(self,obj):
+        category = obj.category
+        return category.category_name
+    
     def get_user_detail(self,obj):
         user = User.objects.get(id=obj.user.id)
         avatar = ''
         if user.profile.avatar:
-            avatar = user.profile.avatar.url
+            avatar = f"http://localhost:8000{user.profile.avatar.url}"
         data = {
             'id':user.id,
             'username':user.username,
-            'avatar':avatar
+            'avatar':avatar,
+            'followers':len(user.followers.all())
         }
         
         return data
 
     class Meta:
         model = Post
-        fields = ['id','title','description','body','thumbnail','category','user_detail','comments','likes','views','created_at','updated_at']
+        fields = ['id','title','description','body','thumbnail','category','category_name','user_detail','comments','likes','views','created_at','updated_at']
 
         read_only_fields = ['id','user_detail','comments','created_at','updated_at','likes','views']
         extra_kwargs = {
-            'body':{'write_only':True}
+            'body':{'write_only':True},
+            'category':{'write_only':True}
         }
         
     
@@ -131,8 +138,11 @@ class AddRemovePostInTutorial(serializers.ModelSerializer):
     
 
 class CategorySerializer(serializers.ModelSerializer):
+    posts = serializers.SerializerMethodField()
 
+    def get_posts(self,obj):
+        return len(obj.posts.all())
     class Meta:
         model = Category
-        fields = "__all__"
+        fields = ['id','category_name','posts']
         read_only_fields = ['id']

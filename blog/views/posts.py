@@ -23,7 +23,7 @@ class PostApiView(ModelViewSet):
     queryset = Post.objects.all()
     # parser_classes = [JSONParser,MultiPartParser,FormParser]
     filter_backends = [DjangoFilterBackend,filters.SearchFilter]
-    filterset_fields = ['category','tutorial','user']
+    filterset_fields = ['category','tutorial','user__username']
     search_fields = ['title', 'description','user__username']
 
     pagination_class = MyPageNumberPagination
